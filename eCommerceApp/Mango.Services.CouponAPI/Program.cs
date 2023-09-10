@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Mango.Services.CouponAPI.Data;
+using AutoMapper;
 
 namespace Mango.Services.CouponAPI
 
@@ -16,6 +17,10 @@ namespace Mango.Services.CouponAPI
                 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
             
             });
+
+            IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
+            builder.Services.AddSingleton(mapper);
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             builder.Services.AddControllers();
 
