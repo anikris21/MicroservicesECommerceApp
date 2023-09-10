@@ -21,6 +21,68 @@ namespace Mango.Services.CouponAPI.Controllers
             this.mapper = mapper;
         }
 
+        [HttpDelete]
+        //[Route("{id:int}")]
+        public ResponseDto Delete(int id)
+        {
+            try
+            {
+                Coupon c = _db.Coupons.First(c => c.CouponId == id);
+                _db.Coupons.Remove(c);
+
+                _db.SaveChanges();
+                _response.Result = mapper.Map<CouponDto>(c);
+                _response.IsSuccess = true;
+
+            }
+            catch
+            {
+                _response.IsSuccess = false;
+
+            }
+            return _response;
+        }
+
+        [HttpPut]
+        public ResponseDto Put(CouponDto couponDto)
+        {
+            try
+            {
+                _db.Coupons.Update(mapper.Map<Coupon>(couponDto));
+
+                _db.SaveChanges();
+                _response.Result = couponDto;
+                _response.IsSuccess = true;
+
+            }
+            catch
+            {
+                _response.IsSuccess = false;
+
+            }
+            return _response;
+        }
+
+        [HttpPost]
+        public ResponseDto Post1(CouponDto couponDto)
+        {
+            try
+            {
+                _db.Coupons.Add(mapper.Map<Coupon>(couponDto));
+                
+                _db.SaveChanges();
+                _response.Result = couponDto;
+                _response.IsSuccess = true;
+
+            }
+            catch
+            {
+                _response.IsSuccess = false;
+
+            }
+            return _response;
+        }
+
         [HttpGet]
         public ResponseDto GetCoupons()
         {
@@ -45,6 +107,16 @@ namespace Mango.Services.CouponAPI.Controllers
         {
        
             _response.Result = mapper.Map<CouponDto>(_db.Coupons.FirstOrDefault(c => c.CouponId == id));
+            _response.IsSuccess = true;
+            return _response;
+        }
+
+        [HttpGet]
+        [Route("GetByCode/{code}")]
+        public ResponseDto GetByCode(string code)
+        {
+
+            _response.Result = mapper.Map<CouponDto>(_db.Coupons.FirstOrDefault(c => c.CouponCode == code));
             _response.IsSuccess = true;
             return _response;
         }
